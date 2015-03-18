@@ -4,6 +4,6 @@
 	Professor: Leonardo Lacerda
 	Site: notasdeaula.lacerda.eti.br
 
-# peço que não copiem o codigo para não haver trabalhos zerados	
+# Peço que não copiem o codigo para não haver trabalhos zerados	
 
 	
