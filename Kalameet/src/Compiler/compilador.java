@@ -14,9 +14,30 @@ public class compilador {
     public static void main(String[] args) {
         try {
             //        try {
-            AnalisadorLexico al = new AnalisadorLexico("lprime.l");
-            al.startAnalysis();
-            al.salva(false);
+            if (args.length > 0) {
+                if (args[0].equals("-help")) {
+                    System.out.println("###################################");
+                    System.out.println("####      Primeira Etapa        ###");
+                    System.out.println("####  Analisado lexico para     ###");
+                    System.out.println("####   Para Linguagem L         ###");
+                    System.out.println("#### notasdeaula.lacerda.eti.br ###");
+                    System.out.println("###################################");
+                    System.out.println("####   Sintaxe:         ###########");
+                    //   System.out.println("#### -2f = salva em arquivo #######");
+                    System.out.println("#### java -jar lprime.l ###########");
+                    System.out.println("###################################");
+                } else {
+                    AnalisadorLexico al = new AnalisadorLexico(args[0]);
+                    al.startAnalysis();
+                    al.salva(false);
+                }
+
+            } else {
+                AnalisadorLexico al = new AnalisadorLexico("lprime.l");
+
+                al.startAnalysis();
+                al.salva(false);
+            }
             //al.deserializa();
 //        } catch (IOException ex) {
 //            Logger.getLogger(AnalisadorLexico.class.getName()).log(Level.SEVERE, null, ex);
