@@ -4,7 +4,7 @@ b = (8 + 7) x 4,1
 c = 91 - 3 * 2.4
 d = 41 : (4 / 2)
 e = (a * (((b x c) : d) / 2))
-
+#
 se a > 10 então
    tela.mensagem = "A é maior que 10"
 fim-se
@@ -53,6 +53,6 @@ m[1][1] = 1.5
 m[1][2] = 3.2
 m[2][1] = 3,3
 m[2][i] = 2,9
-
+#
 # As outras posições não foram inicializadas
 Portanto há zero ou espaço no seu interior #
