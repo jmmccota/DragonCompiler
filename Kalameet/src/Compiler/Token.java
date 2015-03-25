@@ -5,11 +5,13 @@
  */
 package Compiler;
 
+import java.io.Serializable;
+
 /**
  *
  * @author JM
  */
-public class Token {
+public class Token implements Serializable {
 
     private String tipo;
     private String valor;

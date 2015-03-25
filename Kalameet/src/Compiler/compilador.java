@@ -33,20 +33,19 @@ public class compilador {
                 }
 
             } else {
+                //Thread.sleep(40000);
                 AnalisadorLexico al = new AnalisadorLexico("lprime.l");
 
                 al.startAnalysis();
                 al.salva(false);
+                //al.serializa();
             }
-            //al.deserializa();
-//        } catch (IOException ex) {
-//            Logger.getLogger(AnalisadorLexico.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (ClassNotFoundException ex) {
-//            Logger.getLogger(AnalisadorLexico.class.getName()).log(Level.SEVERE, null, ex);
-//        }
         } catch (IOException ex) {
             Logger.getLogger(AnalisadorLexico.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
+//        catch (InterruptedException ex) {
+//            Logger.getLogger(compilador.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 
 }

@@ -53,6 +53,7 @@ public class AnalisadorLexico {
         lexemas.put("]", "]");
         lexemas.put("(", "(");
         lexemas.put(")", ")");
+        lexemas.put("", "");
 //Comparativos
         lexemas.put(">", "gt");
         lexemas.put(">=", "gte");
@@ -177,7 +178,7 @@ public class AnalisadorLexico {
                 listaTokens = new ArrayList<Token>();
                 count++;
                 lin = br.readLine();
-               // Token token = null;
+                // Token token = null;
                 String t = "";
                 for (int i = 0; i < lin.length(); i++) {
                     if (lin.charAt(i) == '#') {
@@ -188,19 +189,13 @@ public class AnalisadorLexico {
                         if (lin.charAt(i) == '"') {
                             t = "";
                             i++;
-                            while (lin.charAt(i) != '"') {
+                            while (lin.charAt(i) != '"' && i < lin.length()) {
                                 t += lin.charAt(i);
                                 i++;
-                            }                            
-                            listaTokens.add(new Token(lexemas.get("string"), t));
-                        } else if (Character.isLetter(lin.charAt(i))) {
-                            t = "";
-                            t += lin.charAt(i);
-                            if (lexemas.containsKey(t)) {// && !ValidaLetra(s.charAt(i + 1))) {
-                                //t = "" + t + "";
-                                listaTokens.add(new Token(lexemas.get(t), t));
                             }
-                        } else if (lin.charAt(i) == '>' || lin.charAt(i) == '<' || lin.charAt(i) == '=') {
+                            listaTokens.add(new Token(lexemas.get("string"), t));
+                            t = "";
+                        } else if (lin.charAt(i) == '>' || lin.charAt(i) == '<' || lin.charAt(i) == '=' || lin.charAt(i) == '!') {
                             t = "";
                             t += lin.charAt(i);
 
@@ -212,10 +207,12 @@ public class AnalisadorLexico {
                                 i++;
                             }
                             listaTokens.add(new Token(lexemas.get(t), t));
-                        } else if ((i + 1) < lin.length() && (lin.charAt(i) + "" + lin.charAt(i + 1)).equals("!=")) {
-                            t = lin.charAt(i) + "" + lin.charAt(i + 1);
-                            listaTokens.add(new Token(lexemas.get(t), t));
-                            i++;
+                            t = "";
+//                        } else if ((i + 1) < lin.length() && 
+//                                (lin.charAt(i) + "" + lin.charAt(i + 1)).equals("!=")) {
+//                            t = lin.charAt(i) + "" + lin.charAt(i + 1);
+//                            listaTokens.add(new Token(lexemas.get(t), t));
+//                            i++;
                         } else if (Character.isDigit(lin.charAt(i))) {
                             t = "";
                             if (i > 0 && Character.isLetter(lin.charAt(i - 1)) && lin.charAt(i - 1) != 'x') {
@@ -249,15 +246,32 @@ public class AnalisadorLexico {
                                 }
                                 t = "";
                             }
-                        } else if (lin.charAt(i) == 'x' && i > 0 && (i + 1) < lin.length() && ((lin.charAt(i - 1) == ' ' && lin.charAt(i + 1) == ' ') || (Character.isDigit((lin.charAt(i - 1))) && Character.isDigit(lin.charAt(i + 1))) || (lin.charAt(i + 1) == '(' && (lin.charAt(i - 1) == ' ' || Character.isDigit(lin.charAt(i - 1)))))) {
+                        } else if (lin.charAt(i) == 'x'
+                                && i > 0
+                                && (i + 1) < lin.length()
+                                && ((lin.charAt(i - 1) == ' '
+                                && lin.charAt(i + 1) == ' ')
+                                || (Character.isDigit(lin.charAt(i - 1))
+                                && Character.isDigit(lin.charAt(i + 1)))
+                                || (lin.charAt(i + 1) == '('
+                                && (lin.charAt(i - 1) == ' '
+                                || Character.isDigit(lin.charAt(i - 1))
+                                || lin.charAt(i - 1) == ' '))
+                                || (lin.charAt(i - 1) == ')'
+                                && (lin.charAt(i + 1) == ' '
+                                || Character.isDigit(lin.charAt(i + 1))
+                                || lin.charAt(i + 1) == '(')) || (lin.charAt(i + 1) == '('
+                                && (lin.charAt(i - 1) == ' '
+                                || Character.isDigit(lin.charAt(i - 1))
+                                || lin.charAt(i + 1) == ')')))) {
                             t = " ";
                             t += lin.charAt(i) + " ";
-                            System.err.println('"' + t + '"');
+//                            System.err.println('"' + t + '"');
                             listaTokens.add(new Token(lexemas.get(t), t));
                         } else if (lin.length() == 1 && lin.charAt(i) == 'x') {
                             t = " ";
                             t += lin.charAt(i) + " ";
-                            System.err.println('"' + t + '"');
+                            //System.err.println('"' + t + '"');
                             listaTokens.add(new Token(lexemas.get(t), t));
 //                        } else if (s.charAt(i) == '+' || s.charAt(i) == '*') {
 //                            t = "";
@@ -272,7 +286,7 @@ public class AnalisadorLexico {
                             //i++;
                             while (lin.charAt(i) == ' ' && i < lin.length()) {
                                 i++;
-                                
+
                             }
 //                            i--;
 //                            if (s.charAt(i + 1) == '(') {
@@ -350,8 +364,14 @@ public class AnalisadorLexico {
                                 listaTokens.add(new Token(t, t));
                                 t = "";
                             }
+                        } else if (Character.isLetter(lin.charAt(i))) {
+                            t = "";
+                            t += lin.charAt(i);
+                            if (lexemas.containsKey(t)) {// && !ValidaLetra(s.charAt(i + 1))) {
+                                //t = "" + t + "";
+                                listaTokens.add(new Token(lexemas.get(t), t));
+                            }
                         }
-
                     }
                 }
                 tokens.put(count, listaTokens);
