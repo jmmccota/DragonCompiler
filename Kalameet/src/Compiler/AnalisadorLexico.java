@@ -209,7 +209,6 @@ public class AnalisadorLexico {
                                 }
                                 i++;
                             }
-                            System.err.println(t);
                             listaTokens.add(new Token(lexemas.get(t), t));
                         } else if ((i + 1) < s.length() && (s.charAt(i) + "" + s.charAt(i + 1)).equals("!=")) {
                             t = s.charAt(i) + "" + s.charAt(i + 1);
