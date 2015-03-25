@@ -155,9 +155,12 @@ public class AnalisadorLexico {
             Integer key = entrySet.getKey();
             ArrayList<Token> value = entrySet.getValue();
             //fw.write("\n" + key + "\t");
+            System.out.print(key + " - ");
             for (Token value1 : value) {
+                System.out.print(value1.toString() + " ");
                 fw.write(value1.getValor() + "\n");
             }
+            System.out.println("");
         }
         fw.close();
     }
@@ -357,32 +360,16 @@ public class AnalisadorLexico {
         } catch (IOException ex) {
             Logger.getLogger(AnalisadorLexico.class.getName()).log(Level.SEVERE, "Arquivo nao encontrado", ex);
         }
-        for (Map.Entry<Integer, ArrayList<Token>> entrySet
-                : tokens.entrySet()) {
-            Integer key = entrySet.getKey();
-            ArrayList<Token> value = entrySet.getValue();
-            System.out.print(key + " - ");
-            for (Token value1 : value) {
-                System.out.print(value1.toString() + " ");
-            }
-            System.out.println("");
-        }
     }
 
-//    public boolean ValidaHifen(char simbolo, int indice) {
-//        return simbolo.charAt(indice) == '-' && ValidaLetra(simbolo.charAt(indice - 1)) && ValidaLetra(simbolo.charAt(indice + 1));
-//    }
-//    public static void main(String[] args) {
-//        try {
-//            AnalisadorLexico al = new AnalisadorLexico("lprime.l");
-//            al.startAnalysis();
-//            al.salva(false);
-//            //al.deserializa();
-//        } catch (IOException ex) {
-//            Logger.getLogger(AnalisadorLexico.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
     public static void main(String[] args) {
-        
+        try {
+            AnalisadorLexico al = new AnalisadorLexico("lprime.l");
+            al.startAnalysis();
+            al.salva(false);
+            //al.deserializa();
+        } catch (IOException ex) {
+            Logger.getLogger(AnalisadorLexico.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
