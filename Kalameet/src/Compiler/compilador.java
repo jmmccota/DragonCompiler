@@ -21,10 +21,10 @@ public class compilador {
                     System.out.println("####  Analisado lexico para     ###");
                     System.out.println("####   Para Linguagem L         ###");
                     System.out.println("#### notasdeaula.lacerda.eti.br ###");
-                    System.out.println("###################################");
-                    System.out.println("####   Sintaxe:         ###########");
+                    System.out.println("####----------------------------###");
+                    System.out.println("####   Sintaxe:                 ###");
                     //   System.out.println("#### -2f = salva em arquivo #######");
-                    System.out.println("#### java -jar lprime.l ###########");
+                    System.out.println("#### java -jar lprime.l         ###");
                     System.out.println("###################################");
                 } else {
                     AnalisadorLexico al = new AnalisadorLexico(args[0]);

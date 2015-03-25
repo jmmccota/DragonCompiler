@@ -11,14 +11,12 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jdk.nashorn.internal.codegen.types.NumericType;
 
 /**
  * @author JM
@@ -156,7 +154,7 @@ public class AnalisadorLexico {
             Integer key = entrySet.getKey();
             ArrayList<Token> value = entrySet.getValue();
             //fw.write("\n" + key + "\t");
-            System.out.print(key + " - ");
+            System.out.print(key + "\t- ");
             for (Token value1 : value) {
                 System.out.print(value1.toString() + " ");
                 fw.write(value1.getValor() + "\n");
@@ -167,15 +165,14 @@ public class AnalisadorLexico {
     }
 
     public void startAnalysis() {
-        try {
-            BufferedReader br = carrega(path);
+        try (BufferedReader br = carrega(path)) {
             int count = 0;
             String lin = "";
             boolean comentario = false;
             ArrayList<Token> listaTokens;
 
             while (br.ready()) {
-                listaTokens = new ArrayList<Token>();
+                listaTokens = new ArrayList<>();
                 count++;
                 lin = br.readLine();
                 // Token token = null;
@@ -213,6 +210,30 @@ public class AnalisadorLexico {
 //                            t = lin.charAt(i) + "" + lin.charAt(i + 1);
 //                            listaTokens.add(new Token(lexemas.get(t), t));
 //                            i++;
+                        } else if (((i + 2) < lin.length()) && ("" + lin.charAt(i) + lin.charAt(i + 1) + lin.charAt(i + 2)).equals("fim")) {
+                            t = "" + lin.charAt(i) + lin.charAt(i + 1) + lin.charAt(i + 2);
+                            i += 2;
+                            String segunda = "";
+                            
+                            if (lin.charAt(i + 1) == '-') {
+                                int aux = i + 2;
+                                while (aux < lin.length() && Character.isLetter(lin.charAt(aux))) {
+                                    segunda += lin.charAt(aux);
+                                    aux++;
+                                }
+//                                aux--;
+                                if (lexemas.containsKey(t + "-" + segunda)) {
+                                    listaTokens.add(new Token(lexemas.get(t + "-" + segunda), t + "-" + segunda));
+//                                    i = aux - 1;
+                                    i = aux;
+                                    t = "";
+                                } else {
+                                    listaTokens.add(new Token(lexemas.get("var"), t));
+                                    listaTokens.add(new Token(lexemas.get("-"), "-"));
+                                    t = "";
+                                }
+
+                            }
                         } else if (Character.isDigit(lin.charAt(i))) {
                             t = "";
                             if (i > 0 && Character.isLetter(lin.charAt(i - 1)) && lin.charAt(i - 1) != 'x') {
@@ -379,6 +400,8 @@ public class AnalisadorLexico {
             br.close();
         } catch (IOException ex) {
             Logger.getLogger(AnalisadorLexico.class.getName()).log(Level.SEVERE, "Arquivo nao encontrado", ex);
+        } finally {
+
         }
     }
 
