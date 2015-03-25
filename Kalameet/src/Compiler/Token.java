@@ -38,6 +38,7 @@ public class Token {
     @Override
     public String toString() {
         return "<" + tipo + "," + valor + ">";
+//        return valor;;
     }
 
 }
