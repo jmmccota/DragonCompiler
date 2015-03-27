@@ -175,9 +175,10 @@ public class AnalisadorLexico {
                 listaTokens = new ArrayList<>();
                 count++;
                 lin = br.readLine();
-                // Token token = null;
                 String t = "";
                 for (int i = 0; i < lin.length(); i++) {
+                    String simbolo = "";
+                    simbolo += lin.charAt(i);
                     if (lin.charAt(i) == '#') {
                         comentario = !comentario;
                     }
@@ -288,16 +289,105 @@ public class AnalisadorLexico {
                             t = " ";
                             t += lin.charAt(i) + " ";
                             listaTokens.add(new Token(lexemas.get(t), t));
+                            t = "";
                         } else if (lin.length() == 1 && lin.charAt(i) == 'x') {
                             t = " ";
                             t += lin.charAt(i) + " ";
                             //System.err.println('"' + t + '"');
                             listaTokens.add(new Token(lexemas.get("var"), t));
+                            t = "";
                         } else if (lin.charAt(i) == '.') {
                             t = "";
                             listaTokens.add(new Token(lexemas.get("."), "."));
+                            t = "";
 //------------------------------------------------------------------------------------------------                            
-                        } 
+                        } else if (lin.charAt(i) == '(' && i > 0) {
+                            int aux = i - 1;
+                            while (aux > 0 && lin.charAt(aux) == ' ') {
+                                aux--;
+                            }
+                            if (!Character.isLetter(lin.charAt(aux)) && !Character.isDigit(lin.charAt(aux))) {
+                                funcao = false;
+                                pilha.push("(");
+                            } else if (!listaTokens.isEmpty() && listaTokens.get(listaTokens.size() - 1).getTipo().equals("id")) {
+                                listaTokens.get(listaTokens.size() - 1).setTipo("fun");
+                                pilha.push("((");
+                                funcao = true;
+                            }
+                            listaTokens.add(new Token(lexemas.get("("), "("));
+                            t = "";
+                        } else if (lin.charAt(i) == ')' && pilha.size() >= 2 && pilha.get(pilha.size() - 2).equals("((")) {
+                            pilha.pop();
+                            listaTokens.add(new Token(lexemas.get(")"), ")"));
+                            t = "";
+                            funcao = true;
+                        } else if (lin.charAt(i) == ')' && pilha.size() == 1) {
+                            pilha.pop();
+                            listaTokens.add(new Token(lexemas.get(")"), ")"));
+                            t = "";
+                            funcao = false;
+                        } else if (lin.charAt(i) != 'e' && lin.charAt(i) != 'x' && lexemas.containsKey(simbolo)) {
+                            if (lin.charAt(i) == '(') {
+                                pilha.push("(");
+                                listaTokens.add(new Token(lexemas.get("("), "("));
+                                t = "";
+                                funcao = false;
+                            } else if (lin.charAt(i) == ')') {
+                                if (!pilha.isEmpty()) {
+                                    pilha.pop();
+                                }
+                                listaTokens.add(new Token(lexemas.get(")"), ")"));
+                                t = "";
+                                funcao = false;
+                            } else {
+                                listaTokens.add(new Token(lexemas.get(simbolo), simbolo));
+                                t = "";
+                            }
+                        } else if (lin.charAt(i) == '(' && i > 0) {
+                            int k = i - 1;
+                            while (k > 0 && lin.charAt(k) == ' ') {
+                                k--;
+                            }
+                            if (!Character.isLetter(lin.charAt(k)) && !Character.isDigit(lin.charAt(k))) {
+                                funcao = false;
+                                pilha.push("(");
+                            } else if (!listaTokens.isEmpty() && listaTokens.get(listaTokens.size() - 1).getTipo().equals("id")) {
+                                listaTokens.get(listaTokens.size() - 1).setTipo("fun");
+                                pilha.push("((");
+                                funcao = true;
+                            }
+                            listaTokens.add(new Token(lexemas.get("("), "("));
+                            t = "";
+                        } else if (lin.charAt(i) == ')' && pilha.size() >= 2 && pilha.get(pilha.size() - 2).equals("((")) {
+                            pilha.pop();
+                            listaTokens.add(new Token(lexemas.get(")"), ")"));
+                            t = "";
+                            funcao = true;
+                        } else if (lin.charAt(i) == ')' && pilha.size() == 1) {
+                            pilha.pop();
+                            listaTokens.add(new Token(lexemas.get(")"), ")"));
+                            t = "";
+                            funcao = false;
+                        } else if (lin.charAt(i) != 'e' && lin.charAt(i) != 'x' && lexemas.containsKey(simbolo)) {
+//se for (, entao a funcao é setada como falsa
+                            if (lin.charAt(i) == '(') {
+                                pilha.push("(");
+                                listaTokens.add(new Token(lexemas.get("("), "("));
+                                t = "";
+                                funcao = false;
+                            } else if (lin.charAt(i) == ')') {
+                                if (!pilha.isEmpty()) {
+                                    pilha.pop();
+                                }
+                                listaTokens.add(new Token(lexemas.get(")"), ")"));
+                                t = "";
+                                funcao = false;
+                            } else {
+                                listaTokens.add(new Token(lexemas.get(simbolo), simbolo));
+                                t = "";
+                            }
+
+                        }
                     }
                 }
                 tokens.put(count, listaTokens);
