@@ -249,7 +249,7 @@ public class AnalisadorLexico {
                             do {
                                 t += lin.charAt(i);
                                 i++;
-                                if ((i < lin.length() && (lin.charAt(i) == '.' || lin.charAt(i) == ',') && (i + 1) < lin.length() && Character.isDigit(lin.charAt(i + 1)) && inteiro )){// && !(((funcao || Character.isLetter(t.charAt(0))) && lin.charAt(i) == ',') || (Character.isLetter(t.charAt(0)) && lin.charAt(i) == '.'))) {
+                                if ((i < lin.length() && (lin.charAt(i) == '.' || lin.charAt(i) == ',') && (i + 1) < lin.length() && Character.isDigit(lin.charAt(i + 1)) && inteiro)) {// && !(((funcao || Character.isLetter(t.charAt(0))) && lin.charAt(i) == ',') || (Character.isLetter(t.charAt(0)) && lin.charAt(i) == '.'))) {
                                     if (!(((funcao || Character.isLetter(t.charAt(0))) && lin.charAt(i) == ',') || (Character.isLetter(t.charAt(0)) && lin.charAt(i) == '.'))) {
                                         t += lin.charAt(i);
                                         i++;
@@ -289,7 +289,7 @@ public class AnalisadorLexico {
                             t = "";
                         } else if (lin.charAt(i) == '.') {
                             listaTokens.add(new Token(lexemas.get("."), "."));
-                            t = "";                    
+                            t = "";
                         } else if (lin.charAt(i) == '(' && i > 0) {
                             int aux = i - 1;
                             while (aux > 0 && lin.charAt(aux) == ' ') {
@@ -333,11 +333,11 @@ public class AnalisadorLexico {
                                 t = "";
                             }
                         } else if (lin.charAt(i) == '(' && i > 0) {
-                            int k = i - 1;
-                            while (k > 0 && lin.charAt(k) == ' ') {
-                                k--;
+                            int aux = i - 1;
+                            while (aux > 0 && lin.charAt(aux) == ' ') {
+                                aux--;
                             }
-                            if (!Character.isLetter(lin.charAt(k)) && !Character.isDigit(lin.charAt(k))) {
+                            if (!Character.isLetter(lin.charAt(aux)) && !Character.isDigit(lin.charAt(aux))) {
                                 funcao = false;
                                 pilha.push("(");
                             } else if (!listaTokens.isEmpty() && listaTokens.get(listaTokens.size() - 1).getTipo().equals("id")) {
@@ -381,6 +381,31 @@ public class AnalisadorLexico {
                                 listaTokens.add(new Token(lexemas.get(t), t));
                                 t = "";
                             }
+//                            ********************************
+                            String segunda = "";
+                            if (!t.equals(" ") && !t.equals("") && (i + 1) < lin.length() && !Character.isLetter(lin.charAt(i + 1)) && !Character.isDigit(lin.charAt(i + 1))) {
+                                if (t.equals("fim") && lin.charAt(i + 1) == '-') {
+                                    int aux = i + 2;
+                                    while (aux < lin.length() && (Character.isLetter(lin.charAt(aux)) || Character.isDigit(lin.charAt(aux)))) {
+                                        segunda = segunda + lin.charAt(aux);
+                                        aux++;
+                                    }
+                                    aux--;
+                                    if (lexemas.containsKey(t + '-' + segunda) && (((aux + 1) < lin.length() && (!Character.isLetter(lin.charAt(aux + 1)) || !Character.isDigit(lin.charAt(aux + 1)))) || (aux + 1) == lin.length())) {
+
+                                        listaTokens.add(new Token(lexemas.get(t + '-' + segunda), t + '-' + segunda));
+                                        t = "";
+                                        i = aux;
+                                    } else {
+                                        listaTokens.add(new Token(lexemas.get("var"), t));
+                                        t = "";
+                                    }
+                                } else {
+                                    listaTokens.add(new Token(lexemas.get("var"), t));
+                                    t = "";
+                                }
+                            }
+//********************************
                             if (!t.equals(" ") && !t.equals("") && (i + 1) == lin.length()) {
                                 listaTokens.add(new Token(lexemas.get("var"), t));
                                 t = "";
