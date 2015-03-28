@@ -164,6 +164,18 @@ public class AnalisadorLexico {
         fw.close();
     }
 
+    public void imprime() {
+        for (Map.Entry<Integer, ArrayList<Token>> entrySet : tokens.entrySet()) {
+            Integer key = entrySet.getKey();
+            ArrayList<Token> value = entrySet.getValue();
+            System.out.print(key + "\t- ");
+            for (Token value1 : value) {
+                System.out.print(value1.toString() + " ");
+            }
+            System.out.println("");
+        }
+    }
+
     public void startAnalysis() {
         try (BufferedReader br = carrega(path)) {
             int count = 0;
