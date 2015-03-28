@@ -34,8 +34,8 @@ public class compilador {
 
             } else {
                 //Thread.sleep(40000);
-                //AnalisadorLexico al = new AnalisadorLexico("lprime.l");
-                AnalisadorLexico al = new AnalisadorLexico("teste2.txt");
+                AnalisadorLexico al = new AnalisadorLexico("lprime.l");
+//                AnalisadorLexico al = new AnalisadorLexico("teste2.txt");;
 
                 al.startAnalysis();
                 al.salva(false);
