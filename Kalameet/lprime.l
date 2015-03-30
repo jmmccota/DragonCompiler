@@ -1,4 +1,4 @@
-# Comentário: Início do código de exemplo
+# Comentário: Início do código de exemplo#
 a = 5 x 3,2
 b = (8 + 7) x 4,1
 c = 91 - 3 * 2.4
@@ -53,7 +53,7 @@ m[1][1] = 1.5
 m[1][2] = 3.2
 m[2][1] = 3,3
 m[2][i] = 2,9
-#
+
 fun(a,b,fun2((4,15+(7+d)), (8.9+e)))
 # As outras posições não foram inicializadas
 Portanto há zero ou espaço no seu interior #
