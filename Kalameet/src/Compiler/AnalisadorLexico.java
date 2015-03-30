@@ -30,8 +30,8 @@ public class AnalisadorLexico {
     private boolean funcao;
 
     public AnalisadorLexico(String path) {
-        tokens = new LinkedHashMap<Integer, ArrayList<Token>>();
-        lexemas = new HashMap<String, String>();
+        tokens = new LinkedHashMap<>();
+        lexemas = new HashMap<>();
         pilha = new Stack<>();
         this.path = path;
         preencheLexemas();

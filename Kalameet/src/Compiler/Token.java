@@ -39,7 +39,8 @@ public class Token implements Serializable {
 
     @Override
     public String toString() {
-        return "<" + tipo + "," + valor + ">";
+//        return "<" + tipo + "," + valor + ">";
+        return "<"+valor+">";
 //        return valor;;
     }
 
