@@ -1,47 +1,47 @@
-# Comentário: Início do código de exemplo#
+# Comentï¿½rio: Inï¿½cio do cï¿½digo de exemplo
 a = 5 x 3,2
 b = (8 + 7) x 4,1
 c = 91 - 3 * 2.4
 d = 41 : (4 / 2)
 e = (a * (((b x c) : d) / 2))
 
-se a > 10 então
-   tela.mensagem = "A é maior que 10"
+se a > 10 entï¿½o
+   tela.mensagem = "A ï¿½ maior que 10"
 fim-se
 
-se b < 30 então
-   tela.mensagem2 = "B é menor que 30"
+se b < 30 entï¿½o
+   tela.mensagem2 = "B ï¿½ menor que 30"
 fim-se
 
-se (c <= 40) então
-   tela.mensagem3 = "C é menor ou igual a 40"
+se (c <= 40) entï¿½o
+   tela.mensagem3 = "C ï¿½ menor ou igual a 40"
 fim-se
 
-se (d >= 20) e (d =< 60) então
-   tela.mensagem4 = "D está entre 20 e 60"
+se (d >= 20) e (d =< 60) entï¿½o
+   tela.mensagem4 = "D estï¿½ entre 20 e 60"
 fim-se
 
-se (e =< 30,5) e (e != 20) então
-   tela.mensagem5 = "E é menor que 30 e meio, mas é diferente de 20"
-   se (e == 0) então
-     tela.mensagem5 = "E é zero"
-   senão
-   se (e < 0) então
-     tela.mensagem5 = "E é negativo"
+se (e =< 30,5) e (e != 20) entï¿½o
+   tela.mensagem5 = "E ï¿½ menor que 30 e meio, mas ï¿½ diferente de 20"
+   se (e == 0) entï¿½o
+     tela.mensagem5 = "E ï¿½ zero"
+   senï¿½o
+   se (e < 0) entï¿½o
+     tela.mensagem5 = "E ï¿½ negativo"
      apaga(tela.mensagem, telamensagem2, telamensagem3, telamensagem4)
    fim-se
    fim-se
 fim-se
 
 fat = 1
-para i de 1 até 10 faça
+para i de 1 atï¿½ 10 faï¿½a
     fat = fat x i
 fim-para
 tela = "10! = " + fat
 
 fat = 1
 i = 1
-enquanto i <= 5 faça
+enquanto i <= 5 faï¿½a
     fat = fat x i
     i = i + 1
 fim-enquanto
@@ -55,5 +55,7 @@ m[2][1] = 3,3
 m[2][i] = 2,9
 
 fun(a,b,fun2((4,15+(7+d)), (8.9+e)))
-# As outras posições não foram inicializadas
-Portanto há zero ou espaço no seu interior #
+#
+"asd asd asd #asd# asd asd"
+# As outras posiï¿½ï¿½es nï¿½o foram inicializadas
+Portanto hï¿½ zero ou espaï¿½o no seu interior #
