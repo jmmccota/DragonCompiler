@@ -1,5 +1,7 @@
 package Compiler;
 
+import Compiler.utils.Lexemas;
+import Compiler.utils.Token;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,52 +41,7 @@ public class AnalisadorLexico {
     }
 
     private void preencheLexemas() {
-//Aritmeticos
-        lexemas.put("+", "+");
-        lexemas.put("-", "-");
-        lexemas.put("*", "*");
-        lexemas.put(" x ", "*");
-        lexemas.put("/", "/");
-        lexemas.put(":", "/");
-        lexemas.put(".", ".");
-        lexemas.put(",", ".");
-        lexemas.put("[", "[");
-        lexemas.put("]", "]");
-        lexemas.put("(", "(");
-        lexemas.put(")", ")");
-//        lexemas.put("", "");
-//Comparativos
-        lexemas.put(">", "gt");
-        lexemas.put(">=", "gte");
-        lexemas.put("<", "lt");
-        lexemas.put("=<", "lte");
-        lexemas.put("==", "eq");
-        lexemas.put("!=", "neq");
-//Gerais
-        lexemas.put("=", "=");
-        lexemas.put("int", "int");
-        lexemas.put("float", "float");
-        lexemas.put("string", "string");
-        lexemas.put("var", "id");
-        lexemas.put("fun", "fun");
-        lexemas.put("vet", "vet");
-//Palavras-chave
-//Condicionais
-        lexemas.put("se", "cond");
-        lexemas.put("então", "initcond");
-        lexemas.put("senão", "altcond");
-        lexemas.put("fim-se", "endcond");
-        lexemas.put("e", "&&");
-        lexemas.put("ou", "||");
-//Loops
-        lexemas.put("para", "forloop");
-        lexemas.put("de", "rng1forloop");
-        lexemas.put("até", "rng2forloop");
-        lexemas.put("faça", "initloop");
-        lexemas.put("fim-para", "endforloop");
-        lexemas.put("enquanto", "whileloop");
-        lexemas.put("fim-enquanto", "endwhileloop");
-
+        lexemas = new Lexemas().getLexemas();
     }
 
     public BufferedReader carrega(String path) throws IOException {

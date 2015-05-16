@@ -1,4 +1,4 @@
-package Compiler;
+package Compiler.utils;
 import java.util.HashMap;
 import java.util.Map;
 public class MatrizDinamica<T> {
