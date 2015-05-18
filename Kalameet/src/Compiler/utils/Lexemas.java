@@ -14,71 +14,76 @@ import java.util.HashMap;
 
 public class Lexemas {
 
-    private HashMap<String, String> lexemas;
+    private static HashMap<String, String> instancia;
 
-    public Lexemas() {
-        lexemas = new HashMap<>();
-
-        //############### LEXEMAS DA LINGUAGEM #################
-        //Aritmeticos
-        lexemas.put("+", "+");
-        lexemas.put("-", "-");
-        lexemas.put("*", "*");
-        lexemas.put("x", "*");
-        lexemas.put("/", "/");
-        lexemas.put(":", "/");
-        //Comparativos
-        lexemas.put(">", ">");
-        lexemas.put(">=", ">=");
-        lexemas.put("=>", ">=");
-        lexemas.put("<", "<");
-        lexemas.put("<=", "<=");
-        lexemas.put("=<", "<=");
-        lexemas.put("==", "==");
-        lexemas.put("!=", "!=");
-        lexemas.put("e", "and");
-        lexemas.put("ou", "or");
-        lexemas.put("não", "not");
-        //Gerais
-        lexemas.put("(", "(");
-        lexemas.put(")", ")");
-        lexemas.put("[", "[");
-        lexemas.put("]", "]");
-        lexemas.put("=", "=");
-        lexemas.put(".", ".");
-        lexemas.put(",", ",");
-        //Palavras-chave
-        //Gerais
-        lexemas.put("endinstr", "endinstr");
-        lexemas.put("verdadeiro", "true");
-        lexemas.put("falso", "false");
-        lexemas.put("funcao", "funinit");
-        lexemas.put("fim-funcao", "endfun");
-        //Tipos
-        lexemas.put("int", "int");
-        lexemas.put("float", "float");
-        lexemas.put("str", "str,");
-        lexemas.put("var", "var");
-        lexemas.put("fun", "fun");
-        lexemas.put("vetor", "vet");
-        //Condicionais
-        lexemas.put("se", "if");
-        lexemas.put("então", "then");
-        lexemas.put("senão", "else");
-        lexemas.put("fim-se", "endif");
-        //Loops
-        lexemas.put("para", "for");
-        lexemas.put("de", "from");
-        lexemas.put("até", "to");
-        lexemas.put("faça", "do");
-        lexemas.put("fim-para", "endfor");
-        lexemas.put("enquanto", "while");
-        lexemas.put("fim-enquanto", "endwhile");
-        //#####################################################
+    private Lexemas() {
+        instancia = new HashMap<>();
     }
 
-    public HashMap<String, String> getLexemas() {
-        return lexemas;
+    private HashMap<String, String> preenche(){
+        //############### LEXEMAS DA LINGUAGEM #################
+          //Aritmeticos
+        instancia.put("+", "+");
+        instancia.put("-", "-");
+        instancia.put("*", "*");
+        instancia.put("x", "*");
+        instancia.put("/", "/");
+        instancia.put(":", "/");
+        //Comparativos
+        instancia.put(">", ">");
+        instancia.put(">=", ">=");
+        instancia.put("=>", ">=");
+        instancia.put("<", "<");
+        instancia.put("<=", "<=");
+        instancia.put("=<", "<=");
+        instancia.put("==", "==");
+        instancia.put("!=", "!=");
+        instancia.put("e", "and");
+        instancia.put("ou", "or");
+        instancia.put("não", "not");
+        //Gerais
+        instancia.put("(", "(");
+        instancia.put(")", ")");
+        instancia.put("[", "[");
+        instancia.put("]", "]");
+        instancia.put("=", "=");
+        instancia.put(".", ".");
+        instancia.put(",", ",");
+        //Palavras-chave
+        //Gerais
+        instancia.put("endinstr", "endinstr");
+        instancia.put("verdadeiro", "true");
+        instancia.put("falso", "false");
+        instancia.put("funcao", "funinit");
+        instancia.put("fim-funcao", "endfun");
+        //Tipos
+        instancia.put("int", "int");
+        instancia.put("float", "float");
+        instancia.put("str", "str,");
+        instancia.put("var", "var");
+        instancia.put("fun", "fun");
+        instancia.put("vetor", "vet");
+        //Condicionais
+        instancia.put("se", "if");
+        instancia.put("então", "then");
+        instancia.put("senão", "else");
+        instancia.put("fim-se", "endif");
+        //Loops
+        instancia.put("para", "for");
+        instancia.put("de", "from");
+        instancia.put("até", "to");
+        instancia.put("faça", "do");
+        instancia.put("fim-para", "endfor");
+        instancia.put("enquanto", "while");
+        instancia.put("fim-enquanto", "endwhile");
+        instancia.put("|n","|n");
+        return instancia;
+    }
+    public static synchronized HashMap<String, String> getLexemas() {
+        if(instancia == null){
+            instancia = new Lexemas().preenche();
+        } 
+        return instancia;
     }
 
 }

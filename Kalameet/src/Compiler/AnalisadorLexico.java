@@ -41,7 +41,7 @@ public class AnalisadorLexico {
     }
 
     private void preencheLexemas() {
-        lexemas = new Lexemas().getLexemas();
+        lexemas = Lexemas.getLexemas();
     }
 
     public BufferedReader carrega(String path) throws IOException {
@@ -180,21 +180,26 @@ public class AnalisadorLexico {
                             t = "" + lin.charAt(i) + lin.charAt(i + 1) + lin.charAt(i + 2);
                             i += 2;
                             String segunda = "";
-                            if (lin.charAt(i + 1) == '-') {
-                                int aux = i + 2;
-                                while (aux < lin.length() && (Character.isLetter(lin.charAt(aux)) || Character.isDigit(lin.charAt(aux)))) {
-                                    segunda += lin.charAt(aux);
-                                    aux++;
+                            if ((i + 1) < lin.length()) {
+                                if (lin.charAt(i + 1) == '-') {
+                                    int aux = i + 2;
+                                    while (aux < lin.length() && (Character.isLetter(lin.charAt(aux)) || Character.isDigit(lin.charAt(aux)))) {
+                                        segunda += lin.charAt(aux);
+                                        aux++;
+                                    }
+                                    if (lexemas.containsKey(t + "-" + segunda)) {
+                                        listaTokens.add(new Token(lexemas.get(t + "-" + segunda), t + "-" + segunda));
+                                        i = aux;
+                                        t = "";
+                                    } else {
+                                        listaTokens.add(new Token(lexemas.get("var"), t));
+                                        listaTokens.add(new Token(lexemas.get("-"), "-"));
+                                        t = "";
+                                    }
                                 }
-                                if (lexemas.containsKey(t + "-" + segunda)) {
-                                    listaTokens.add(new Token(lexemas.get(t + "-" + segunda), t + "-" + segunda));
-                                    i = aux;
-                                    t = "";
-                                } else {
-                                    listaTokens.add(new Token(lexemas.get("var"), t));
-                                    listaTokens.add(new Token(lexemas.get("-"), "-"));
-                                    t = "";
-                                }
+                            } else {
+                                listaTokens.add(new Token("fim", "fim"));
+                                t="";
                             }
                         } else if (lin.charAt(i) == 'e' && i > 0 && (i + 1) < lin.length() && !listaTokens.isEmpty() && listaTokens.get(listaTokens.size() - 1).getTipo().equals(")")) {
                             while (Character.isWhitespace(lin.charAt(i)) && i < lin.length()) {
@@ -247,7 +252,7 @@ public class AnalisadorLexico {
                                 listaTokens.add(new Token(lexemas.get("float"), t));
                                 t = "";
                             }
-                        } else if (lin.charAt(i) == 'x' && i > 0 && (i + 1) < lin.length() && ((Character.isWhitespace(lin.charAt(i - 1))  && Character.isWhitespace(lin.charAt(i + 1))) || (Character.isDigit(lin.charAt(i - 1)) && Character.isDigit(lin.charAt(i + 1))) || (Character.isWhitespace(lin.charAt(i - 1)) && Character.isDigit(lin.charAt(i + 1))) || (Character.isDigit(lin.charAt(i - 1)) && Character.isWhitespace(lin.charAt(i + 1))))) {
+                        } else if (lin.charAt(i) == 'x' && i > 0 && (i + 1) < lin.length() && ((Character.isWhitespace(lin.charAt(i - 1)) && Character.isWhitespace(lin.charAt(i + 1))) || (Character.isDigit(lin.charAt(i - 1)) && Character.isDigit(lin.charAt(i + 1))) || (Character.isWhitespace(lin.charAt(i - 1)) && Character.isDigit(lin.charAt(i + 1))) || (Character.isDigit(lin.charAt(i - 1)) && Character.isWhitespace(lin.charAt(i + 1))))) {
                             t = " ";
                             t += lin.charAt(i) + " ";
                             listaTokens.add(new Token(lexemas.get(t), t));
@@ -392,6 +397,10 @@ public class AnalisadorLexico {
         } catch (IOException ex) {
             Logger.getLogger(AnalisadorLexico.class.getName()).log(Level.SEVERE, "Arquivo nao encontrado", ex);
         }
+    }
+
+    public Map<Integer, ArrayList<Token>> getTokens() {
+        return tokens;
     }
 
     public static void main(String[] args) {

@@ -49,6 +49,8 @@ public class compilador {
                 AnalisadorLexico al = new AnalisadorLexico("lprime.l");
                 al.startAnalysis();
                 al.salva(false);
+                AnalisadorSintatico aS = new AnalisadorSintatico(al);
+                aS.startAnalysis();
             }
         } catch (IOException ex) {
             Logger.getLogger(AnalisadorLexico.class.getName()).log(Level.SEVERE, null, ex);

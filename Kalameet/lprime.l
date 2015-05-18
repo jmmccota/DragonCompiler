@@ -1,4 +1,4 @@
-# Coment�rio: In�cio do c�digo de exemplo
+# Coment�rio: In�cio do c�digo de exemplo#
 a = 5 x 3,2
 b = (8 + 7) x 4,1
 c = 91 - 3 * 2.4
@@ -55,7 +55,6 @@ m[2][1] = 3,3
 m[2][i] = 2,9
 
 fun(a,b,fun2((4,15+(7+d)), (8.9+e)))
-#
-"asd asd asd #asd# asd asd"
+fim
 # As outras posi��es n�o foram inicializadas
 Portanto h� zero ou espa�o no seu interior #
