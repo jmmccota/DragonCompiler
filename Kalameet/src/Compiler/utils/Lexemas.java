@@ -20,9 +20,9 @@ public class Lexemas {
         instancia = new HashMap<>();
     }
 
-    private HashMap<String, String> preenche(){
+    private HashMap<String, String> preenche() {
         //############### LEXEMAS DA LINGUAGEM #################
-          //Aritmeticos
+        //Aritmeticos
         instancia.put("+", "+");
         instancia.put("-", "-");
         instancia.put("*", "*");
@@ -49,18 +49,20 @@ public class Lexemas {
         instancia.put("=", "=");
         instancia.put(".", ".");
         instancia.put(",", ",");
+        instancia.put(";", ";");
         //Palavras-chave
         //Gerais
-        instancia.put("endinstr", "endinstr");
+        instancia.put(".endinstr", ".endinstr");
         instancia.put("verdadeiro", "true");
         instancia.put("falso", "false");
-        instancia.put("funcao", "funinit");
-        instancia.put("fim-funcao", "endfun");
+        instancia.put("funcao", "def");
+        instancia.put("fim-funcao", "enddef");
+        instancia.put("fim", "end");
         //Tipos
         instancia.put("int", "int");
         instancia.put("float", "float");
-        instancia.put("str", "str,");
-        instancia.put("var", "var");
+        instancia.put("str", "str");
+        instancia.put("var", "id");
         instancia.put("fun", "fun");
         instancia.put("vetor", "vet");
         //Condicionais
@@ -76,13 +78,13 @@ public class Lexemas {
         instancia.put("fim-para", "endfor");
         instancia.put("enquanto", "while");
         instancia.put("fim-enquanto", "endwhile");
-        instancia.put("|n","|n");
         return instancia;
     }
+
     public static synchronized HashMap<String, String> getLexemas() {
-        if(instancia == null){
+        if (instancia == null) {
             instancia = new Lexemas().preenche();
-        } 
+        }
         return instancia;
     }
 

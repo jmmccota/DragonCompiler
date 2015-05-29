@@ -44,4 +44,10 @@ public class Token implements Serializable {
 //        return valor;;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        Token o = (Token) obj;
+        return (tipo.equalsIgnoreCase(o.getTipo()) && valor.equalsIgnoreCase(o.getValor()));
+    }
+
 }

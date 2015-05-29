@@ -199,7 +199,7 @@ public class AnalisadorLexico {
                                 }
                             } else {
                                 listaTokens.add(new Token("fim", "fim"));
-                                t="";
+                                t = "";
                             }
                         } else if (lin.charAt(i) == 'e' && i > 0 && (i + 1) < lin.length() && !listaTokens.isEmpty() && listaTokens.get(listaTokens.size() - 1).getTipo().equals(")")) {
                             while (Character.isWhitespace(lin.charAt(i)) && i < lin.length()) {
@@ -380,18 +380,19 @@ public class AnalisadorLexico {
                                     t = "";
                                 }
                             }
-//********************************
                             if (!t.equals(" ") && !t.equals("") && (i + 1) == lin.length()) {
                                 listaTokens.add(new Token(lexemas.get("var"), t));
                                 t = "";
                             }
                         } else {
-                            //else final...
+                            // vazio
                         }
                     }
                 }
-//                }
-                tokens.put(count, listaTokens);
+                // listaTokens.add(new Token(";", ";"));
+                if (!listaTokens.isEmpty()) {
+                    tokens.put(count, listaTokens);
+                }
             }
             br.close();
         } catch (IOException ex) {

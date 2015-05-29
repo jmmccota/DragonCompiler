@@ -55,6 +55,6 @@ m[2][1] = 3,3
 m[2][i] = 2,9
 
 fun(a,b,fun2((4,15+(7+d)), (8.9+e)))
-fim
 # As outras posi��es n�o foram inicializadas
 Portanto h� zero ou espa�o no seu interior #
+fim
