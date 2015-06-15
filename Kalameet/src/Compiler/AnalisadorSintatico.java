@@ -1,28 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Compiler;
 
 import Compiler.utils.Token;
 import Compiler.utils.Arvore;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Stack;
-import javax.sound.midi.SysexMessage;
 
-/**
- *
- * @author JM
- */
 public class AnalisadorSintatico {
 
     private LinkedHashMap<Integer, Arvore<Token>> arvores;
     private AnalisadorLexico aL;
-    //private HashMap<String, String> lexemas;
 
     public AnalisadorSintatico(AnalisadorLexico an) {
         this.aL = an;
@@ -31,33 +19,8 @@ public class AnalisadorSintatico {
     public LinkedHashMap<Integer, Arvore<Token>> getArvores() {
         return arvores;
     }
-
-    private boolean verificaFim() {
-        Map<Integer, ArrayList<Token>> linhas = aL.getTokens();
-        Integer[] keys = new Integer[linhas.size()];
-        keys = linhas.keySet().toArray(keys);
-        boolean erro = false;
-        for (int i = 0; i < keys.length; i++) {
-            if (linhas.get(keys[i]).contains(new Token("fim", "fim"))) {
-                if (linhas.get(keys[i]).size() > 2) {
-                    System.err.println("Fim deve estar em uma linha separada. Linha: " + keys[i]);
-                    erro = true;
-                    System.exit(0);
-                }
-                if (i < (keys.length - 1)) {
-                    System.err.println("Instrucoes apos o "
-                            + "termino do programa. Linha: " + keys[i]);
-                    erro = true;
-                    System.exit(0);
-                }
-                return erro;
-            }
-        }
-        System.err.println("Fim do programa nao encontrado.");
-        return true;
-    }
-
     /* FUNCOES AUXILIARES */
+
     private int indexOf(ArrayList array, Object x) {
         for (int i = 0; i < array.size(); i++) {
             if (array.get(i).equals(x)) {
@@ -170,31 +133,29 @@ public class AnalisadorSintatico {
 
     /* ====================IDENTIFICADORES DE GRAMATICA==================== */
     /* ANALISE MACRO */
-    private boolean programa() {
-        return verificaFim();
-//        Map<Integer, ArrayList<Token>> linhas = aL.getTokens();
-//        Integer[] keys = new Integer[linhas.size()];
-//        keys = linhas.keySet().toArray(keys);
-//
-//        boolean erro = false;
-//        for (int i = 0; i < keys.length; i++) {
-//            if (linhas.get(keys[i]).contains(new Token("end", ""))) {
-//                if (linhas.get(keys[i]).size() > 2) {
-//                    erros.add(new ErroSintatico(keys[i], "\"fim\" deve estar"
-//                            + "em uma linha a parte."));
-//                    System.err.println("'fim' deve estar em linha separada. Linha: "keys[i]);
-//                    erro = true; System.exit(0);
-//                }
-//                if (i < keys.length - 1) {
-//                    erros.add(new ErroSintatico(keys[i], "Instrucoes apos o "
-//                            + "termino do programa."));
-//                    erro = true; System.exit(0);
-//                }
-//                return erro;
-//            }
-//        }
-//        erros.add(new ErroSintatico(1, "Fim do programa nao encontrado."));
-//        return true;
+    private boolean verificaFim() {
+        Map<Integer, ArrayList<Token>> linhas = aL.getTokens();
+        Integer[] keys = new Integer[linhas.size()];
+        keys = linhas.keySet().toArray(keys);
+        boolean erro = false;
+        for (int i = 0; i < keys.length; i++) {
+            if (linhas.get(keys[i]).contains(new Token("fim", "fim"))) {
+                if (linhas.get(keys[i]).size() > 2) {
+                    System.err.println("Fim deve estar em uma linha separada. Linha: " + keys[i]);
+                    erro = true;
+                    System.exit(0);
+                }
+                if (i < (keys.length - 1)) {
+                    System.err.println("Instrucoes apos o "
+                            + "termino do programa. Linha: " + keys[i]);
+                    erro = true;
+                    System.exit(0);
+                }
+                return erro;
+            }
+        }
+        System.err.println("Fim do programa nao encontrado.");
+        return true;
     }
 
     private boolean estruturaBlocos() {
@@ -872,7 +833,7 @@ public class AnalisadorSintatico {
         linha2instr();
 
         /* Analise de blocos do codigo */
-        erro |= programa();
+        erro |= verificaFim();
         erro |= estruturaBlocos();
         erro |= atribuicoes();
         erro |= declVetor();
