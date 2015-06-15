@@ -42,11 +42,13 @@ public class AnalisadorSintatico {
                 if (linhas.get(keys[i]).size() > 2) {
                     System.err.println("Fim deve estar em uma linha separada. Linha: " + keys[i]);
                     erro = true;
+                    System.exit(0);
                 }
                 if (i < (keys.length - 1)) {
                     System.err.println("Instrucoes apos o "
                             + "termino do programa. Linha: " + keys[i]);
                     erro = true;
+                    System.exit(0);
                 }
                 return erro;
             }
@@ -181,12 +183,12 @@ public class AnalisadorSintatico {
 //                    erros.add(new ErroSintatico(keys[i], "\"fim\" deve estar"
 //                            + "em uma linha a parte."));
 //                    System.err.println("'fim' deve estar em linha separada. Linha: "keys[i]);
-//                    erro = true;
+//                    erro = true; System.exit(0);
 //                }
 //                if (i < keys.length - 1) {
 //                    erros.add(new ErroSintatico(keys[i], "Instrucoes apos o "
 //                            + "termino do programa."));
-//                    erro = true;
+//                    erro = true; System.exit(0);
 //                }
 //                return erro;
 //            }
@@ -224,6 +226,7 @@ public class AnalisadorSintatico {
                     System.err.println("'senao' sem 'se "
                             + "correspondente.Linha: " + nLinha);
                     erro = true;
+                    System.exit(0);
                 } else {
                     pilha.pop();
                     lStk.pop();
@@ -234,6 +237,7 @@ public class AnalisadorSintatico {
                     System.err.println("Palavra-chave 'senao' "
                             + "deve estar sozinha na linha.Linha: " + nLinha);
                     erro = true;
+                    System.exit(0);
                 }
             }
             int indexEndif = indexOf(linha, new Token("endif", ""));
@@ -243,11 +247,13 @@ public class AnalisadorSintatico {
                     System.err.println("Todos os blocos "
                             + "condicionais ja foram encerrados.Linha: " + nLinha);
                     erro = true;
+                    System.exit(0);
                 } else if (!"se".equals(pilha.peek())
                         && !"senao".equals(pilha.peek())) {
                     System.err.println("'fim-se' sem 'se' "
                             + "ou 'senao' correspondente.Linha: " + nLinha);
                     erro = true;
+                    System.exit(0);
                 } else {
                     pilha.pop();
                     lStk.pop();
@@ -256,6 +262,7 @@ public class AnalisadorSintatico {
                     System.err.println("'fim-se' "
                             + "deve estar em linha a parte.Linha: " + nLinha);
                     erro = true;
+                    System.exit(0);
                 }
             }
             /* =========== FIM BLOCO CONDICIONAL =========== */
@@ -275,10 +282,12 @@ public class AnalisadorSintatico {
                     System.err.println("Todos os blocos "
                             + "'enquanto' ja foram encerrados.Linha: " + nLinha);
                     erro = true;
+                    System.exit(0);
                 } else if (!"enquanto".equals(pilha.peek())) {
                     System.err.println("'fim-enquanto' sem "
                             + "'enquanto'.Linha: " + nLinha);
                     erro = true;
+                    System.exit(0);
                 } else {
                     pilha.pop();
                     lStk.pop();
@@ -287,6 +296,7 @@ public class AnalisadorSintatico {
                     System.err.println("'fim-enquanto' "
                             + "deve estar sozinha na linha." + nLinha);
                     erro = true;
+                    System.exit(0);
                 }
             }
             /* =========== FIM BLOCO ENQUANTO =========== */
@@ -305,10 +315,12 @@ public class AnalisadorSintatico {
                 if (pilha.empty()) {
                     System.err.println("Todos os blocos 'para' ja foram encerrados.Linha: " + nLinha);
                     erro = true;
+                    System.exit(0);
                 } else if (!"para".equals(pilha.peek())) {
                     System.err.println("'fim-para' sem "
                             + "'para'.Linha: " + nLinha);
                     erro = true;
+                    System.exit(0);
                 } else {
                     pilha.pop();
                     lStk.pop();
@@ -317,6 +329,7 @@ public class AnalisadorSintatico {
                     System.err.println("'fim-para' "
                             + "deve estar sozinha na linha.Linha: " + nLinha);
                     erro = true;
+                    System.exit(0);
                 }
             }
             /* =========== FIM BLOCO PARA =========== */
@@ -336,10 +349,12 @@ public class AnalisadorSintatico {
                     System.err.println("Todos as definicoes "
                             + "de funcoes ja foram encerrados.Linha: " + nLinha);
                     erro = true;
+                    System.exit(0);
                 } else if (!"funcao".equals(pilha.peek())) {
                     System.err.println("'fim-funcao' sem "
                             + "'funcao' correspondente.Linha: " + nLinha);
                     erro = true;
+                    System.exit(0);
                 } else {
                     pilha.pop();
                     lStk.pop();
@@ -348,6 +363,7 @@ public class AnalisadorSintatico {
                     System.err.println("'fim-funcao' "
                             + "deve estar sozinha na linha.Linha: " + nLinha);
                     erro = true;
+                    System.exit(0);
                 }
             }
             /* =========== FIM BLOCO DEF =========== */
@@ -359,8 +375,9 @@ public class AnalisadorSintatico {
             String e = pilha.pop();
             int nl = lStk.pop();
             System.err.println("Bloco '" + e
-                    + "' nao encerrado.Linha: "+nl );
+                    + "' nao encerrado.Linha: " + nl);
             erro = true;
+            System.exit(0);
         }
         return erro;
     }
@@ -385,6 +402,7 @@ public class AnalisadorSintatico {
                     System.err.println("Atribuicoes deve ser a uma "
                             + "variavel.Linha: " + nLinha);
                     erro = true;
+                    System.exit(0);
                 }
                 Arvore<Token> arvore = new Arvore<>(new Token("=", ""));
                 Arvore<Token> termo = termo(linha, 0, indexAtrib - 1);
@@ -395,12 +413,14 @@ public class AnalisadorSintatico {
                 } else {
                     System.err.println("Erro no termo.Linha: " + nLinha);
                     erro = true;
+                    System.exit(0);
                 }
                 if (condicao != null) {
                     arvore.setDir(condicao);
                 } else {
                     System.err.println("Erro na condicao.Linha: " + nLinha);
                     erro = true;
+                    System.exit(0);
                 }
 
                 arvores.put(nLinha, arvore);
@@ -426,21 +446,25 @@ public class AnalisadorSintatico {
                     System.err.println("Token antes da palavra chave "
                             + "'vetor'.Linha: " + nLinha);
                     erro = true;
+                    System.exit(0);
                 }
                 if (indexVet == linha.size() - 1) {
                     System.err.println("Vetor a ser declarado nao "
                             + "especificado.Linha: " + nLinha);
                     erro = true;
+                    System.exit(0);
                 } else { //Caso vetor tenha sido especificado
                     if (!"id".equals(linha.get(indexVet + 1).getTipo())) {
                         System.err.println("Vetor deve possuir um nome de "
                                 + "variavel valido.Linha: " + nLinha);
                         erro = true;
+                        System.exit(0);
                     }
                     if (indexVet + 4 > linha.size() - 1) {
                         System.err.println("Tamanho do vetor nao "
                                 + "especificado corretamente.Linha: " + nLinha);
                         erro = true;
+                        System.exit(0);
                     }
                     //Vetor 1 dimensao
                     if (indexVet + 4 == linha.size() - 1) {
@@ -449,11 +473,13 @@ public class AnalisadorSintatico {
                             System.err.println("Tamanho do vetor nao "
                                     + "especificado corretamente.Linha: " + nLinha);
                             erro = true;
+                            System.exit(0);
                         }
                         if (!"int".equals(linha.get(indexVet + 3).getTipo())) {
                             System.err.println("Tamanho do vetor deve "
                                     + "ser inteiro.Linha: " + nLinha);
                             erro = true;
+                            System.exit(0);
                         }
                     }
                     //Vetor 2 dimensoes
@@ -465,6 +491,7 @@ public class AnalisadorSintatico {
                             System.err.println("Tamanho do vetor nao "
                                     + "especificado corretamente.Linha: " + nLinha);
                             erro = true;
+                            System.exit(0);
                         }
 
                         if (!"int".equals(linha.get(indexVet + 3).getTipo())
@@ -472,6 +499,7 @@ public class AnalisadorSintatico {
                             System.err.println("Tamanho do vetor deve "
                                     + "ser inteiro.Linha: " + nLinha);
                             erro = true;
+                            System.exit(0);
                         }
                     } else if (indexVet + 8 < linha.size()) {
                         int indexColch = rIndexOf(linha, new Token("]", ""));
@@ -483,6 +511,7 @@ public class AnalisadorSintatico {
                                     + "apos a declaracao de um vetor.Linha: " + nLinha);
                         }
                         erro = true;
+                        System.exit(0);
                     }
                 }
             }
@@ -500,21 +529,25 @@ public class AnalisadorSintatico {
             System.err.println("Token antes da "
                     + "palavra-chave 'se'.Linha: " + nLinha);
             erro = true;
+            System.exit(0);
         }
         int indexThen = indexOf(linha, new Token("then", ""));
         if (indexThen == -1) {
             System.err.println("Ausencia de "
                     + "'entao' apos palavra-chave 'se'.Linha: " + nLinha);
             erro = true;
+            System.exit(0);
         }
         if (indexThen + 1 < linha.size()) {
             System.err.println("Token apos a "
                     + "palavra-chave 'entao'.Linha: " + nLinha);
             erro = true;
+            System.exit(0);
         }
         if (condicao(linha, indexIf + 1, indexThen - 1) == null) {
             System.err.println("Erro na condicao.Linha: " + nLinha);
             erro = true;
+            System.exit(0);
         }
 
         return erro;
@@ -529,6 +562,7 @@ public class AnalisadorSintatico {
             System.err.println("Token antes da "
                     + "palavra-chave 'enquanto'.Linha: " + nLinha);
             erro = true;
+            System.exit(0);
         }
 
         int indexDo = indexOf(linha, new Token("do", ""));
@@ -536,15 +570,18 @@ public class AnalisadorSintatico {
             System.err.println("Ausencia de "
                     + "'entao' apos palavra-chave 'faca'.Linha: " + nLinha);
             erro = true;
+            System.exit(0);
         } else {
             if (indexDo + 1 < linha.size()) {
                 System.err.println("Token apos a "
                         + "palavra-chave 'faca'.Linha: " + nLinha);
                 erro = true;
+                System.exit(0);
             }
             if (condicao(linha, indexWhile + 1, indexDo - 1) == null) {
-                System.err.println("Erro na condicao.Linha: "+nLinha);
+                System.err.println("Erro na condicao.Linha: " + nLinha);
                 erro = true;
+                System.exit(0);
             }
         }
         return erro;
@@ -562,44 +599,52 @@ public class AnalisadorSintatico {
             System.err.println("Token antes da "
                     + "palavra-chave 'para'.Linha: " + nLinha);
             erro = true;
+            System.exit(0);
         }
         if (indexFrom == -1) {
             System.err.println("Ausencia de "
                     + "'de' apos palavra-chave 'para'.Linha: " + nLinha);
             erro = true;
+            System.exit(0);
         }
         if (indexTo == -1) {
             System.err.println("Ausencia de "
                     + "'ate' apos palavra-chave 'de'.Linha: " + nLinha);
             erro = true;
+            System.exit(0);
         }
         if (indexDo == -1) {
             System.err.println("Ausencia de "
                     + "'faca' apos palavra-chave 'ate'.Linha: " + nLinha);
             erro = true;
+            System.exit(0);
         }
         if (indexDo + 1 < linha.size()) {
             System.err.println("Token apos a "
                     + "palavra-chave 'faca'.Linha: " + nLinha);
             erro = true;
+            System.exit(0);
         }
         if (indexFor + 1 < linha.size()) {
             if (!"id".equals(linha.get(indexFor + 1).getTipo())) {
                 System.err.println("Identificador a ser "
                         + "iterado deve ser uma variavel.Linha: " + nLinha);
                 erro = true;
+                System.exit(0);
             }
             if (!"int".equals(linha.get(indexFrom + 1).getTipo())
                     && !"float".equals(linha.get(indexFrom + 1).getTipo())) {
                 System.err.println("Valor inicial deve ser "
                         + "numerico.Linha: " + nLinha);
                 erro = true;
+                System.exit(0);
             }
             if (!"int".equals(linha.get(indexTo + 1).getTipo())
                     && !"float".equals(linha.get(indexTo + 1).getTipo())) {
                 System.err.println("Valor final deve ser "
                         + "numerico.Linha: " + nLinha);
                 erro = true;
+                System.exit(0);
             }
         }
         if (indexFrom != -1
@@ -607,18 +652,21 @@ public class AnalisadorSintatico {
             System.err.println("Quantidade excessiva "
                     + "de identificadores a serem iterados.Linha: " + nLinha);
             erro = true;
+            System.exit(0);
         }
         if (indexTo != -1
                 && indexTo - indexFrom > 2) {
             System.err.println("Quantidade excessiva "
                     + "de valores iniciais.Linha: " + nLinha);
             erro = true;
+            System.exit(0);
         }
         if (indexDo != -1
                 && indexDo - indexTo > 2) {
             System.err.println("Quantidade excessiva "
                     + "de valores finais.Linha: " + nLinha);
             erro = true;
+            System.exit(0);
         }
 
         return erro;
@@ -633,6 +681,7 @@ public class AnalisadorSintatico {
             System.err.println("Token antes da "
                     + "palavra-chave 'funcao'.Linha: " + nLinha);
             erro = true;
+            System.exit(0);
         }
         if (funcao(linha, indexDef + 1, linha.size() - 1) == null) {
             System.err.println("Erro na declaracao de funcao.Linha: " + nLinha);
@@ -842,11 +891,7 @@ public class AnalisadorSintatico {
     }
 
     public boolean startAnalysis() {
-        boolean erro = false;
-        //erro = verificaSe();
-        if (!erro) {
-            //erro =
-        }
-        return erro;
+
+        return analisar(true);
     }
 }
