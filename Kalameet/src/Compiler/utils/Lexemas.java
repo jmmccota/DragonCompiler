@@ -49,14 +49,15 @@ public class Lexemas {
         instancia.put("=", "=");
         instancia.put(".", ".");
         instancia.put(",", ",");
-        instancia.put(";", ";");
         //Palavras-chave
         //Gerais
         instancia.put(".endinstr", ".endinstr");
         instancia.put("verdadeiro", "true");
         instancia.put("falso", "false");
+        instancia.put("função", "def");
         instancia.put("funcao", "def");
         instancia.put("fim-funcao", "enddef");
+        instancia.put("fim-função", "enddef");
         instancia.put("fim", "end");
         //Tipos
         instancia.put("int", "int");
@@ -68,13 +69,17 @@ public class Lexemas {
         //Condicionais
         instancia.put("se", "if");
         instancia.put("então", "then");
+        instancia.put("entao", "then");
         instancia.put("senão", "else");
+        instancia.put("senao", "else");
         instancia.put("fim-se", "endif");
         //Loops
         instancia.put("para", "for");
         instancia.put("de", "from");
         instancia.put("até", "to");
+        instancia.put("ate", "to");
         instancia.put("faça", "do");
+        instancia.put("faca", "do");
         instancia.put("fim-para", "endfor");
         instancia.put("enquanto", "while");
         instancia.put("fim-enquanto", "endwhile");

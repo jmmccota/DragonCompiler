@@ -389,7 +389,9 @@ public class AnalisadorLexico {
                         }
                     }
                 }
-                // listaTokens.add(new Token(";", ";"));
+
+                listaTokens.add(new Token(lexemas.get(".endinstr"), ".endinstr"));
+
                 if (!listaTokens.isEmpty()) {
                     tokens.put(count, listaTokens);
                 }

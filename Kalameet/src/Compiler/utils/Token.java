@@ -6,6 +6,7 @@
 package Compiler.utils;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  *
@@ -44,10 +45,14 @@ public class Token implements Serializable {
 //        return valor;;
     }
 
+    public boolean equalsIgnoreCase(Object obj) {
+        Token o = (Token) obj;
+        return (tipo.equalsIgnoreCase(o.getTipo()));// && valor.equalsIgnoreCase(o.getValor()));
+    }
+
     @Override
     public boolean equals(Object obj) {
         Token o = (Token) obj;
         return (tipo.equalsIgnoreCase(o.getTipo()) && valor.equalsIgnoreCase(o.getValor()));
     }
-
 }
