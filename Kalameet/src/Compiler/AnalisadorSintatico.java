@@ -71,7 +71,6 @@ public class AnalisadorSintatico {
             } else if (array.get(i).equals(new Token("(", "("))) {
                 if (pilha.empty()) {
                     System.err.println("'(' sem ')' equivalente.");
-
                 }
                 pilha.pop();
             }
@@ -86,7 +85,7 @@ public class AnalisadorSintatico {
         return -1;
     }
 
-    private void linha2instr() {
+    private void retiraQuebra() {
         Map<Integer, ArrayList<Token>> linhas = aL.getTokens();
         Integer[] keys = new Integer[linhas.size()];
         keys = linhas.keySet().toArray(keys);
@@ -95,7 +94,6 @@ public class AnalisadorSintatico {
 
         for (int i = 0; i < keys.length; i++) {
             ArrayList<Token> linha = linhas.get(keys[i]);
-
             //Se instrucao continua na outra linha
             if (!linha.get(linha.size() - 1).equals(new Token(".endinstr", ".endinstr"))) {
                 //armazena a o numero da linha
@@ -117,11 +115,9 @@ public class AnalisadorSintatico {
                 for (int j = nLinha + 1; j <= i; j++) {
                     linhas.remove(keys[j]);
                 }
-
                 aux = new ArrayList<>();
             }
         }
-
         //Remove os endinstr de todas as instrucoes
         keys = linhas.keySet().toArray(keys);
         for (int i = 0; i < keys.length; i++) {
@@ -131,40 +127,34 @@ public class AnalisadorSintatico {
         }
     }
 
-    /* ====================IDENTIFICADORES DE GRAMATICA==================== */
-    /* ANALISE MACRO */
     private boolean verificaFim() {
         Map<Integer, ArrayList<Token>> linhas = aL.getTokens();
         Integer[] keys = new Integer[linhas.size()];
         keys = linhas.keySet().toArray(keys);
-        boolean erro = false;
+        
         for (int i = 0; i < keys.length; i++) {
             if (linhas.get(keys[i]).contains(new Token("fim", "fim"))) {
                 if (linhas.get(keys[i]).size() > 2) {
                     System.err.println("Fim deve estar em uma linha separada. Linha: " + keys[i]);
-                    erro = true;
                     System.exit(0);
                 }
                 if (i < (keys.length - 1)) {
                     System.err.println("Instrucoes apos o "
                             + "termino do programa. Linha: " + keys[i]);
-                    erro = true;
                     System.exit(0);
                 }
-                return erro;
+                return false;
             }
         }
         System.err.println("Fim do programa nao encontrado.");
         return true;
     }
 
-    private boolean estruturaBlocos() {
+    private boolean estruturacao() {
         Map<Integer, ArrayList<Token>> linhas = aL.getTokens();
         Integer[] keys = new Integer[linhas.size()];
         Stack<String> pilha = new Stack<>();
         Stack<Integer> lStk = new Stack<>();
-
-        boolean erro = false;
 
         //Itera pelas linhas de codigo
         for (Map.Entry<Integer, ArrayList<Token>> entrySet : linhas.entrySet()) {
@@ -175,7 +165,7 @@ public class AnalisadorSintatico {
             int indexIf = indexOf(linha, new Token("if", ""));
             //Se for um if
             if (indexIf != -1) {
-                erro |= estruturaIf(nLinha, linha);
+                verificaSe(nLinha, linha);
                 pilha.push("se");
                 lStk.push(nLinha);
             }
@@ -186,7 +176,6 @@ public class AnalisadorSintatico {
                 if (!"se".equals(pilha.peek())) {
                     System.err.println("'senao' sem 'se "
                             + "correspondente.Linha: " + nLinha);
-                    erro = true;
                     System.exit(0);
                 } else {
                     pilha.pop();
@@ -197,7 +186,6 @@ public class AnalisadorSintatico {
                 if (linha.size() != 1) {
                     System.err.println("Palavra-chave 'senao' "
                             + "deve estar sozinha na linha.Linha: " + nLinha);
-                    erro = true;
                     System.exit(0);
                 }
             }
@@ -207,13 +195,11 @@ public class AnalisadorSintatico {
                 if (pilha.empty()) {
                     System.err.println("Todos os blocos "
                             + "condicionais ja foram encerrados.Linha: " + nLinha);
-                    erro = true;
                     System.exit(0);
                 } else if (!"se".equals(pilha.peek())
                         && !"senao".equals(pilha.peek())) {
                     System.err.println("'fim-se' sem 'se' "
                             + "ou 'senao' correspondente.Linha: " + nLinha);
-                    erro = true;
                     System.exit(0);
                 } else {
                     pilha.pop();
@@ -222,17 +208,13 @@ public class AnalisadorSintatico {
                 if (linha.size() != 1) {
                     System.err.println("'fim-se' "
                             + "deve estar em linha a parte.Linha: " + nLinha);
-                    erro = true;
                     System.exit(0);
                 }
             }
-            /* =========== FIM BLOCO CONDICIONAL =========== */
-
-            /* =========== BLOCO ENQUANTO =========== */
             int indexWhile = indexOf(linha, new Token("while", ""));
             //Se for um while
             if (indexWhile != -1) {
-                erro |= estruturaWhile(nLinha, linha);
+                verificaEnquanto(nLinha, linha);
                 pilha.push("enquanto");
                 lStk.push(nLinha);
             }
@@ -242,12 +224,10 @@ public class AnalisadorSintatico {
                 if (pilha.empty()) {
                     System.err.println("Todos os blocos "
                             + "'enquanto' ja foram encerrados.Linha: " + nLinha);
-                    erro = true;
                     System.exit(0);
                 } else if (!"enquanto".equals(pilha.peek())) {
                     System.err.println("'fim-enquanto' sem "
                             + "'enquanto'.Linha: " + nLinha);
-                    erro = true;
                     System.exit(0);
                 } else {
                     pilha.pop();
@@ -256,17 +236,13 @@ public class AnalisadorSintatico {
                 if (linha.size() != 1) {
                     System.err.println("'fim-enquanto' "
                             + "deve estar sozinha na linha." + nLinha);
-                    erro = true;
                     System.exit(0);
                 }
             }
-            /* =========== FIM BLOCO ENQUANTO =========== */
-
-            /* =========== BLOCO PARA =========== */
             int indexFor = indexOf(linha, new Token("for", ""));
             //Se for um for
             if (indexFor != -1) {
-                erro |= estruturaFor(nLinha, linha);
+                verificaPara(nLinha, linha);
                 pilha.push("para");
                 lStk.push(nLinha);
             }
@@ -275,12 +251,10 @@ public class AnalisadorSintatico {
             if (indexEndFor != -1) {
                 if (pilha.empty()) {
                     System.err.println("Todos os blocos 'para' ja foram encerrados.Linha: " + nLinha);
-                    erro = true;
                     System.exit(0);
                 } else if (!"para".equals(pilha.peek())) {
                     System.err.println("'fim-para' sem "
                             + "'para'.Linha: " + nLinha);
-                    erro = true;
                     System.exit(0);
                 } else {
                     pilha.pop();
@@ -289,17 +263,13 @@ public class AnalisadorSintatico {
                 if (linha.size() != 1) {
                     System.err.println("'fim-para' "
                             + "deve estar sozinha na linha.Linha: " + nLinha);
-                    erro = true;
                     System.exit(0);
                 }
             }
-            /* =========== FIM BLOCO PARA =========== */
-
-            /* =========== BLOCO DEF =========== */
             int indexDef = indexOf(linha, new Token("def", ""));
             //Se for um def
             if (indexDef != -1) {
-                erro |= estruturaDef(nLinha, linha);
+                verificaDefinicao(nLinha, linha);
                 pilha.push("funcao");
                 lStk.push(nLinha);
             }
@@ -309,12 +279,10 @@ public class AnalisadorSintatico {
                 if (pilha.empty()) {
                     System.err.println("Todos as definicoes "
                             + "de funcoes ja foram encerrados.Linha: " + nLinha);
-                    erro = true;
                     System.exit(0);
                 } else if (!"funcao".equals(pilha.peek())) {
                     System.err.println("'fim-funcao' sem "
                             + "'funcao' correspondente.Linha: " + nLinha);
-                    erro = true;
                     System.exit(0);
                 } else {
                     pilha.pop();
@@ -323,12 +291,9 @@ public class AnalisadorSintatico {
                 if (linha.size() != 1) {
                     System.err.println("'fim-funcao' "
                             + "deve estar sozinha na linha.Linha: " + nLinha);
-                    erro = true;
                     System.exit(0);
                 }
             }
-            /* =========== FIM BLOCO DEF =========== */
-
         }
 
         //Se houver bloco nao encerrado
@@ -337,19 +302,16 @@ public class AnalisadorSintatico {
             int nl = lStk.pop();
             System.err.println("Bloco '" + e
                     + "' nao encerrado.Linha: " + nl);
-            erro = true;
+
             System.exit(0);
         }
-        return erro;
+        return false;
     }
 
-    private boolean atribuicoes() {
+    private boolean atribuicao() {
         Map<Integer, ArrayList<Token>> linhas = aL.getTokens();
 
-        boolean erro = false;
-
         for (Map.Entry<Integer, ArrayList<Token>> entrySet : linhas.entrySet()) {
-
             Integer nLinha = entrySet.getKey();
             ArrayList<Token> linha = entrySet.getValue();
             int indexAtrib = indexOf(linha, new Token("=", ""));
@@ -362,7 +324,7 @@ public class AnalisadorSintatico {
                         && "]".equals(linha.get(indexAtrib - 1).getTipo()))) {
                     System.err.println("Atribuicoes deve ser a uma "
                             + "variavel.Linha: " + nLinha);
-                    erro = true;
+
                     System.exit(0);
                 }
                 Arvore<Token> arvore = new Arvore<>(new Token("=", ""));
@@ -373,14 +335,14 @@ public class AnalisadorSintatico {
                     arvore.setEsq(termo);
                 } else {
                     System.err.println("Erro no termo.Linha: " + nLinha);
-                    erro = true;
+
                     System.exit(0);
                 }
                 if (condicao != null) {
                     arvore.setDir(condicao);
                 } else {
                     System.err.println("Erro na condicao.Linha: " + nLinha);
-                    erro = true;
+
                     System.exit(0);
                 }
 
@@ -388,12 +350,11 @@ public class AnalisadorSintatico {
 
             }
         }
-        return erro;
+        return false;
     }
 
-    private boolean declVetor() {
+    private boolean verificaVetor() {
         Map<Integer, ArrayList<Token>> linhas = aL.getTokens();
-        boolean erro = false;
 
         for (Map.Entry<Integer, ArrayList<Token>> entrySet : linhas.entrySet()) {
             Integer nLinha = entrySet.getKey();
@@ -406,25 +367,25 @@ public class AnalisadorSintatico {
                 if (indexVet > 0) {
                     System.err.println("Token antes da palavra chave "
                             + "'vetor'.Linha: " + nLinha);
-                    erro = true;
+
                     System.exit(0);
                 }
                 if (indexVet == linha.size() - 1) {
                     System.err.println("Vetor a ser declarado nao "
                             + "especificado.Linha: " + nLinha);
-                    erro = true;
+
                     System.exit(0);
                 } else { //Caso vetor tenha sido especificado
                     if (!"id".equals(linha.get(indexVet + 1).getTipo())) {
                         System.err.println("Vetor deve possuir um nome de "
                                 + "variavel valido.Linha: " + nLinha);
-                        erro = true;
+
                         System.exit(0);
                     }
                     if (indexVet + 4 > linha.size() - 1) {
                         System.err.println("Tamanho do vetor nao "
                                 + "especificado corretamente.Linha: " + nLinha);
-                        erro = true;
+
                         System.exit(0);
                     }
                     //Vetor 1 dimensao
@@ -433,13 +394,13 @@ public class AnalisadorSintatico {
                                 || !"]".equals(linha.get(indexVet + 4).getTipo())) {
                             System.err.println("Tamanho do vetor nao "
                                     + "especificado corretamente.Linha: " + nLinha);
-                            erro = true;
+
                             System.exit(0);
                         }
                         if (!"int".equals(linha.get(indexVet + 3).getTipo())) {
                             System.err.println("Tamanho do vetor deve "
                                     + "ser inteiro.Linha: " + nLinha);
-                            erro = true;
+
                             System.exit(0);
                         }
                     }
@@ -451,7 +412,7 @@ public class AnalisadorSintatico {
                                 || !"]".equals(linha.get(indexVet + 7).getTipo())) {
                             System.err.println("Tamanho do vetor nao "
                                     + "especificado corretamente.Linha: " + nLinha);
-                            erro = true;
+
                             System.exit(0);
                         }
 
@@ -459,7 +420,7 @@ public class AnalisadorSintatico {
                                 || !"int".equals(linha.get(indexVet + 6).getTipo())) {
                             System.err.println("Tamanho do vetor deve "
                                     + "ser inteiro.Linha: " + nLinha);
-                            erro = true;
+
                             System.exit(0);
                         }
                     } else if (indexVet + 8 < linha.size()) {
@@ -471,58 +432,55 @@ public class AnalisadorSintatico {
                             System.err.println("Nao deve haver tokens "
                                     + "apos a declaracao de um vetor.Linha: " + nLinha);
                         }
-                        erro = true;
+
                         System.exit(0);
                     }
                 }
             }
         }
-        return erro;
+        return false;
     }
 
-    /* ANALISE MEDIA */
-    private boolean estruturaIf(int nLinha, ArrayList<Token> linha) {
-        boolean erro = false;
+    private boolean verificaSe(int nLinha, ArrayList<Token> linha) {
 
         int indexIf = indexOf(linha, new Token("if", ""));
 
         if (indexIf > 0) {
             System.err.println("Token antes da "
                     + "palavra-chave 'se'.Linha: " + nLinha);
-            erro = true;
+
             System.exit(0);
         }
         int indexThen = indexOf(linha, new Token("then", ""));
         if (indexThen == -1) {
             System.err.println("Ausencia de "
                     + "'entao' apos palavra-chave 'se'.Linha: " + nLinha);
-            erro = true;
+
             System.exit(0);
         }
         if (indexThen + 1 < linha.size()) {
             System.err.println("Token apos a "
                     + "palavra-chave 'entao'.Linha: " + nLinha);
-            erro = true;
+
             System.exit(0);
         }
         if (condicao(linha, indexIf + 1, indexThen - 1) == null) {
             System.err.println("Erro na condicao.Linha: " + nLinha);
-            erro = true;
+
             System.exit(0);
         }
 
-        return erro;
+        return false;
     }
 
-    private boolean estruturaWhile(int nLinha, ArrayList<Token> linha) {
-        boolean erro = false;
+    private boolean verificaEnquanto(int nLinha, ArrayList<Token> linha) {
 
         int indexWhile = indexOf(linha, new Token("while", "")); //Se for um while
 
         if (indexWhile > 0) {
             System.err.println("Token antes da "
                     + "palavra-chave 'enquanto'.Linha: " + nLinha);
-            erro = true;
+
             System.exit(0);
         }
 
@@ -530,26 +488,25 @@ public class AnalisadorSintatico {
         if (indexDo == -1) {
             System.err.println("Ausencia de "
                     + "'entao' apos palavra-chave 'faca'.Linha: " + nLinha);
-            erro = true;
+
             System.exit(0);
         } else {
             if (indexDo + 1 < linha.size()) {
                 System.err.println("Token apos a "
                         + "palavra-chave 'faca'.Linha: " + nLinha);
-                erro = true;
+
                 System.exit(0);
             }
             if (condicao(linha, indexWhile + 1, indexDo - 1) == null) {
                 System.err.println("Erro na condicao.Linha: " + nLinha);
-                erro = true;
+
                 System.exit(0);
             }
         }
-        return erro;
+        return false;
     }
 
-    private boolean estruturaFor(int nLinha, ArrayList<Token> linha) {
-        boolean erro = false;
+    private boolean verificaPara(int nLinha, ArrayList<Token> linha) {
 
         int indexFor = indexOf(linha, new Token("for", ""));
         int indexFrom = indexOf(linha, new Token("from", ""));
@@ -559,52 +516,52 @@ public class AnalisadorSintatico {
         if (indexFor > 0) {
             System.err.println("Token antes da "
                     + "palavra-chave 'para'.Linha: " + nLinha);
-            erro = true;
+
             System.exit(0);
         }
         if (indexFrom == -1) {
             System.err.println("Ausencia de "
                     + "'de' apos palavra-chave 'para'.Linha: " + nLinha);
-            erro = true;
+
             System.exit(0);
         }
         if (indexTo == -1) {
             System.err.println("Ausencia de "
                     + "'ate' apos palavra-chave 'de'.Linha: " + nLinha);
-            erro = true;
+
             System.exit(0);
         }
         if (indexDo == -1) {
             System.err.println("Ausencia de "
                     + "'faca' apos palavra-chave 'ate'.Linha: " + nLinha);
-            erro = true;
+
             System.exit(0);
         }
         if (indexDo + 1 < linha.size()) {
             System.err.println("Token apos a "
                     + "palavra-chave 'faca'.Linha: " + nLinha);
-            erro = true;
+
             System.exit(0);
         }
         if (indexFor + 1 < linha.size()) {
             if (!"id".equals(linha.get(indexFor + 1).getTipo())) {
                 System.err.println("Identificador a ser "
                         + "iterado deve ser uma variavel.Linha: " + nLinha);
-                erro = true;
+
                 System.exit(0);
             }
             if (!"int".equals(linha.get(indexFrom + 1).getTipo())
                     && !"float".equals(linha.get(indexFrom + 1).getTipo())) {
                 System.err.println("Valor inicial deve ser "
                         + "numerico.Linha: " + nLinha);
-                erro = true;
+
                 System.exit(0);
             }
             if (!"int".equals(linha.get(indexTo + 1).getTipo())
                     && !"float".equals(linha.get(indexTo + 1).getTipo())) {
                 System.err.println("Valor final deve ser "
                         + "numerico.Linha: " + nLinha);
-                erro = true;
+
                 System.exit(0);
             }
         }
@@ -612,43 +569,43 @@ public class AnalisadorSintatico {
                 && indexFrom - indexFor > 2) {
             System.err.println("Quantidade excessiva "
                     + "de identificadores a serem iterados.Linha: " + nLinha);
-            erro = true;
+
             System.exit(0);
         }
         if (indexTo != -1
                 && indexTo - indexFrom > 2) {
             System.err.println("Quantidade excessiva "
                     + "de valores iniciais.Linha: " + nLinha);
-            erro = true;
+
             System.exit(0);
         }
         if (indexDo != -1
                 && indexDo - indexTo > 2) {
             System.err.println("Quantidade excessiva "
                     + "de valores finais.Linha: " + nLinha);
-            erro = true;
+
             System.exit(0);
         }
 
-        return erro;
+        return false;
     }
 
-    private boolean estruturaDef(int nLinha, ArrayList<Token> linha) {
-        boolean erro = false;
+    private boolean verificaDefinicao(int nLinha, ArrayList<Token> linha) {
 
         int indexDef = indexOf(linha, new Token("def", ""));
 
         if (indexDef > 0) {
             System.err.println("Token antes da "
                     + "palavra-chave 'funcao'.Linha: " + nLinha);
-            erro = true;
+
             System.exit(0);
         }
         if (funcao(linha, indexDef + 1, linha.size() - 1) == null) {
             System.err.println("Erro na declaracao de funcao.Linha: " + nLinha);
+            System.exit(0);
         }
 
-        return erro;
+        return false;
     }
 
     /* ANALISE MICRO */
@@ -656,14 +613,14 @@ public class AnalisadorSintatico {
 
         //Armazena os indices das aparicoes dos tokens na linha
         Integer[] indexComparativos = new Integer[8];
-        indexComparativos[0] = rIndexOfParen(linha, new Token("and", ""), start, end);
-        indexComparativos[1] = rIndexOfParen(linha, new Token("or", ""), start, end);
-        indexComparativos[2] = rIndexOfParen(linha, new Token("==", ""), start, end);
-        indexComparativos[3] = rIndexOfParen(linha, new Token("!=", ""), start, end);
-        indexComparativos[4] = rIndexOfParen(linha, new Token("<", ""), start, end);
-        indexComparativos[5] = rIndexOfParen(linha, new Token("<=", ""), start, end);
-        indexComparativos[6] = rIndexOfParen(linha, new Token(">", ""), start, end);
-        indexComparativos[7] = rIndexOfParen(linha, new Token(">=", ""), start, end);
+        indexComparativos[0] = rIndexOfParen(linha, new Token("and", "e"), start, end);
+        indexComparativos[1] = rIndexOfParen(linha, new Token("or", "ou"), start, end);
+        indexComparativos[2] = rIndexOfParen(linha, new Token("==", "="), start, end);
+        indexComparativos[3] = rIndexOfParen(linha, new Token("!=", "!="), start, end);
+        indexComparativos[4] = rIndexOfParen(linha, new Token("<", "<"), start, end);
+        indexComparativos[5] = rIndexOfParen(linha, new Token("<=", "<="), start, end);
+        indexComparativos[6] = rIndexOfParen(linha, new Token(">", ">"), start, end);
+        indexComparativos[7] = rIndexOfParen(linha, new Token(">=", ">="), start, end);
 
         //Descobre qual comparativo esta mais a direita
         int maior = -1;
@@ -824,35 +781,20 @@ public class AnalisadorSintatico {
         return new Arvore<>(new Token("fun", valor));
     }
 
-    /* ==================================================================== */
-    /* FUNCAO PRINCIPAL */
-    public boolean analisar(boolean arvore) {
-        boolean erro = false;
-
-        /* Retira os endinstr e unifica as linhas */
-        linha2instr();
-
-        /* Analise de blocos do codigo */
-        erro |= verificaFim();
-        erro |= estruturaBlocos();
-        erro |= atribuicoes();
-        erro |= declVetor();
-
-        if (arvore) {
-            System.out.println("\n\nAnalise Sintatica:");
-            for (Map.Entry<Integer, Arvore<Token>> entry : arvores.entrySet()) {
-                System.out.print(entry.getKey());
-                entry.getValue().print();
-                System.out.println("\n");
-            }
-            System.out.println("\n\n");
-        }
-
-        return erro;
-    }
-
     public boolean startAnalysis() {
+        retiraQuebra();
+        verificaFim();
+        estruturacao();
+        atribuicao();
+        verificaVetor();
 
-        return analisar(true);
+        System.out.println("\n\nAnalise Sintatica:");
+        for (Map.Entry<Integer, Arvore<Token>> entry : arvores.entrySet()) {
+            System.out.print(entry.getKey());
+            entry.getValue().print();
+            System.out.println("\n");
+        }
+        System.out.println("\n\n");
+        return false;
     }
 }
