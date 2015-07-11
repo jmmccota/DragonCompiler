@@ -310,14 +310,14 @@ public class AnalisadorSintatico {
                 Arvore<Token> condicao = condicao(linha, indiceAtribuicao + 1, linha.size() - 1);
 
                 if (termo != null) {
-                    arvore.setEsq(termo);
+                    arvore.setEsquerda(termo);
                 } else {
                     System.err.println("Erro no termo.Linha: " + nLinha);
 
                     System.exit(0);
                 }
                 if (condicao != null) {
-                    arvore.setDir(condicao);
+                    arvore.setDireita(condicao);
                 } else {
                     System.err.println("Erro na condicao.Linha: " + nLinha);
 
@@ -590,8 +590,8 @@ public class AnalisadorSintatico {
         }
 
         Arvore<Token> arvore = new Arvore<>(linha.get(maior));
-        arvore.setDir(condicao(linha, start, maior - 1));
-        arvore.setEsq(expressao(linha, maior + 1, end));
+        arvore.setDireita(condicao(linha, start, maior - 1));
+        arvore.setEsquerda(expressao(linha, maior + 1, end));
 
         return arvore;
     }
@@ -610,17 +610,17 @@ public class AnalisadorSintatico {
         }
 
         if (maior == -1) {
-            return expressaoPrec(linha, start, end);
+            return expressaoPrecedente(linha, start, end);
         }
 
         Arvore<Token> arvore = new Arvore<>(linha.get(maior));
-        arvore.setDir(expressao(linha, start, maior - 1));
-        arvore.setEsq(expressaoPrec(linha, maior + 1, end));
+        arvore.setEsquerda(expressao(linha, start, maior - 1));
+        arvore.setDireita(expressaoPrecedente(linha, maior + 1, end));
 
         return arvore;
     }
 
-    private Arvore<Token> expressaoPrec(ArrayList<Token> linha, int start, int end) {
+    private Arvore<Token> expressaoPrecedente(ArrayList<Token> linha, int start, int end) {
 
         Integer[] indiceOperadores = new Integer[8];
         indiceOperadores[0] = rIndexOfParen(linha, new Token("*", ""), start, end);
@@ -637,8 +637,8 @@ public class AnalisadorSintatico {
             return termo(linha, start, end);
         }
         Arvore<Token> arvore = new Arvore<>(linha.get(maior));
-        arvore.setDir(termo(linha, maior + 1, end));
-        arvore.setEsq(expressaoPrec(linha, start, maior - 1));
+        arvore.setDireita(termo(linha, maior + 1, end));
+        arvore.setEsquerda(expressaoPrecedente(linha, start, maior - 1));
 
         return arvore;
     }

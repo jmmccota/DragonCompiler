@@ -28,7 +28,7 @@ public class Arvore<T> implements Serializable {
         return esq;
     }
 
-    public void setEsq(Arvore<T> esq) {
+    public void setEsquerda(Arvore<T> esq) {
         this.esq = esq;
     }
 
@@ -36,7 +36,7 @@ public class Arvore<T> implements Serializable {
         return dir;
     }
 
-    public void setDir(Arvore<T> dir) {
+    public void setDireita(Arvore<T> dir) {
         this.dir = dir;
     }
 
@@ -68,7 +68,7 @@ public class Arvore<T> implements Serializable {
     public void print() {
         int alt = altura();
         int esp = (int) (Math.pow(2, alt));
-        LinkedList<Arvore<T>> fila;
+        ArrayList<Arvore<T>> fila;
         for (int i = 0; i < alt; i++) {
             fila = this.folhas(i);
             for (int j = 0; j < esp / 2 - 1; j++) {
@@ -88,17 +88,17 @@ public class Arvore<T> implements Serializable {
         }
     }
 
-    protected LinkedList<Arvore<T>> folhas(int altura) {
-        LinkedList<Arvore<T>> fila = new LinkedList<>();
+    public ArrayList<Arvore<T>> folhas(int altura) {
+        ArrayList<Arvore<T>> fila = new ArrayList<>();
         if (altura == 0) {
             fila.add(this);
         } else {
-            LinkedList<Arvore<T>> fAux;
+            ArrayList<Arvore<T>> fAux;
 
             if (esq != null) {
                 fAux = esq.folhas(altura - 1);
             } else {
-                fAux = new LinkedList<>();
+                fAux = new ArrayList<>();
                 fAux.add(null);
             }
             for (Arvore<T> fila1 : fAux) {
@@ -108,7 +108,7 @@ public class Arvore<T> implements Serializable {
             if (dir != null) {
                 fAux = dir.folhas(altura - 1);
             } else {
-                fAux = new LinkedList<>();
+                fAux = new ArrayList<>();
                 fAux.add(null);
             }
             for (Arvore<T> fila1 : fAux) {
@@ -127,5 +127,37 @@ public class Arvore<T> implements Serializable {
             hDir = dir.altura();
         }
         return 1 + (hEsq > hDir ? hEsq : hDir);
+    }
+
+    public Arvore<T> subarvoreReplace(T substituto) {
+        if (esq.altura() > 1) {
+            return esq.subarvoreReplace(substituto);
+        } else if (dir.altura() > 2
+                || (dir.altura() == 2
+                && !this.nodo.equals(new Token("=", "")))) {
+            return dir.subarvoreReplace(substituto);
+        } else {
+            Arvore<T> aux = new Arvore<>(this.nodo);
+            aux.esq = this.esq;
+            aux.dir = this.dir;
+            this.nodo = substituto;
+            this.esq = null;
+            this.dir = null;
+            return aux;
+        }
+    }
+
+    public int nOperacoes() {
+        int hEsq = 0, hDir = 0;
+        if (esq == null && dir == null) {
+            return 0;
+        }
+        if (esq != null) {
+            hEsq = esq.nOperacoes();
+        }
+        if (dir != null) {
+            hDir = dir.nOperacoes();
+        }
+        return 1 + hEsq + hDir;
     }
 }

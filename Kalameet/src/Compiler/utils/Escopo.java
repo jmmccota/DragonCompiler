@@ -52,7 +52,7 @@ public class Escopo {
             }
         }
         System.err.println("Variavel '"+ variavel + "' nao declarada.");
-        System.exit(0);
+        //System.exit(0);
         return null;
     }
 
